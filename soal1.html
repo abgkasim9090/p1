@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Punny Web — Coming Soon</title>
+    <style>
+      :root {
+        --bg: #f3f5f7; /* warna latar utama yang sangat terang */
+        --text: #2c2f33; /* warna teks utama */
+        --muted: #5f6b77; /* warna teks sekunder */
+        --panel-light: #e9ecef; /* bidang miring kiri (terang) */
+        --panel-dark: #2f3337; /* bidang miring kanan (gelap) */
+        --btn: #ffffff; /* warna tombol */
+        --btn-border: #c8ced6;
+        --btn-hover: #eef1f4;
+        --maxw: 960px; /* lebar maksimum konten */
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden; /* cegah scroll horizontal karena bidang miring */
+      }
+
+      /* ====== HERO WRAPPER ====== */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 64px 20px;
+        isolation: isolate; /* pastikan pseudo-element di bawah konten */
+      }
+
+      /* Bidang miring kiri dan kanan menggunakan pseudo-element */
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: -10% -5%; /* diperlebar sedikit keluar layar agar rapi */
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* KIRI (terang), miring dari kiri-atas ke kanan-bawah */
+      .hero::before {
+        background: var(--panel-light);
+        /* bentuk segitiga memanjang / trapesium miring */
+        clip-path: polygon(0 0, 30% 0, 5% 100%, 0 100%);
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.02));
+      }
+
+      /* KANAN (gelap), miring dari kanan-atas ke kiri-bawah dengan sudut membulat */
+      .hero::after {
+        background: var(--panel-dark);
+        clip-path: polygon(95% 0, 100% 0, 100% 100%, 75% 100%);
+        /* sudut atas-kanan seolah membulat: pakai mask gradient halus */
+        -webkit-mask:
+          radial-gradient(160px 160px at 99% 2%, #000 55%, transparent 56%) top
+            right / 200px 200px no-repeat,
+          linear-gradient(#000, #000);
+        mask:
+          radial-gradient(160px 160px at 99% 2%, #000 55%, transparent 56%) top
+            right / 200px 200px no-repeat,
+          linear-gradient(#000, #000);
+        opacity: 0.92;
+      }
+
+      /* ====== CONTENT ====== */
+      .content {
+        max-width: var(--maxw);
+        text-align: center;
+        padding: 24px;
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(40px, 6vw, 64px);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .subtitle {
+        margin: 0 auto 28px;
+        color: var(--muted);
+        font-size: clamp(16px, 2.2vw, 20px);
+        line-height: 1.6;
+        max-width: 48ch;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid var(--btn-border);
+        background: var(--btn);
+        color: #3c4550;
+        font-size: 16px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: default;
+        transition:
+          background-color 0.2s ease,
+          transform 0.02s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow:
+          0 1px 0 rgba(0, 0, 0, 0.04),
+          0 1.5px 0 rgba(0, 0, 0, 0.02) inset;
+      }
+      .btn:hover {
+        background: var(--btn-hover);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      /* ====== RESPONSIVE TWEAKS ====== */
+      @media (max-width: 640px) {
+        .hero::before {
+          clip-path: polygon(0 0, 55% 0, 35% 100%, 0 100%);
+        }
+        .hero::after {
+          clip-path: polygon(60% 0, 100% 0, 100% 100%, 72% 100%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="hero" role="main" aria-labelledby="site-title">
+      <section class="content">
+        <h1 id="site-title">Punny Web</h1>
+        <p class="subtitle">
+          Website akan segera dapat diakses lengkap<br />
+          pada 10/10/2021.
+        </p>
+        <button class="btn"  aria-label="Status situs: Coming soon">
+          Coming soon
+        </button>
+        <button class="btn" id="hitung" aria-label="Status situs: open">hitung</button>
+        <button class="btn" id="badan" aria-label="Status situs: open">badan</button>
+      </section>
+    </main>
+  </body>
+  <script>
+    let hitung = document.getElementById("hitung");
+    hitung.onclick = function () {
+      let uts = prompt("nilai UTS:");
+      let tugas = prompt("nilai tugas:");
+      let uas = prompt("nilai uas:");
+      let nilaiakhir = 0.3 * uts + 0.4 * tugas + 0.3 * uas;
+
+      let nilaihuruf;
+
+      if (nilaiakhir >= 80) {
+        nilaihuruf = "A";
+      } else if (nilaiakhir >= 70) {
+        nilaihuruf = "B";
+      } else if (nilaiakhir >= 60) {
+        nilaihuruf = "C";
+      } else if (nilaiakhir >= 40) {
+        nilaihuruf = "D";
+      } else {
+        nilaihuruf = "E";
+      };
+      alert("nilai akhir:" + nilaiakhir + nilaihuruf )
+    };
+
+    let badan = document.getElementById("badan");
+    badan.onclick = function(){
+        let berat=prompt("beratbadan:");
+        let tinggi=prompt("tinggi badan:");
+        let bmi= berat / (tinggi * tinggi);
+
+        let kategori;
+
+        if (bmi <= 15){
+            kategori ="berat badan sangat kurang"
+        }
+        else if (bmi >= 15 &&  bmi <= 18.49){kategori ="berat badan kurang(underweight)"}
+        else if (bmi >= 18.5 && bmi <= 23.99){kategori ="normal"}
+        else if (bmi >= 24 && bmi <= 29){kategori = "kelebihan "}
+        else{kategori="obesitas"}
+        alert("hasil:" + bmi + kategori)
+    };
+
+
+  </script>
+</html>
